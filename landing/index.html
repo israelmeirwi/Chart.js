@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI לבעלי עסקים | הקורס שישנה את העסק שלך</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange:  '#F97316',
+              orangeH: '#EA580C',
+              orangeL: '#FED7AA',
+              bg:      '#0C0C0C',
+              card:    '#141414',
+              border:  '#252525',
+              muted:   '#737373',
+            }
+          },
+          fontFamily: {
+            sans: ['Heebo', 'sans-serif'],
+          },
+          boxShadow: {
+            orange: '0 0 40px rgba(249,115,22,0.25)',
+            orangeSm: '0 0 20px rgba(249,115,22,0.15)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: #0C0C0C; color: #FAFAFA; font-family: 'Heebo', sans-serif; overflow-x: hidden; }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #F97316 0%, #FBBF24 60%, #F97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Orange glow button */
+    .btn-orange {
+      background: #F97316;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 12px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+    .btn-orange:hover {
+      background: #EA580C;
+      box-shadow: 0 0 32px rgba(249,115,22,0.45);
+      transform: translateY(-2px);
+    }
+    .btn-orange:active { transform: translateY(0); }
+
+    /* Card */
+    .glass-card {
+      background: #141414;
+      border: 1px solid #252525;
+      border-radius: 20px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .glass-card:hover {
+      border-color: rgba(249,115,22,0.35);
+      box-shadow: 0 0 32px rgba(249,115,22,0.1);
+      transform: translateY(-4px);
+    }
+
+    /* Pricing highlighted */
+    .card-popular {
+      background: #141414;
+      border: 2px solid #F97316;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(249,115,22,0.2);
+    }
+
+    /* FAQ accordion */
+    .faq-item { border-bottom: 1px solid #252525; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s; }
+    .faq-answer.open { max-height: 400px; padding-bottom: 1.25rem; }
+    .faq-icon { transition: transform 0.3s; }
+    .faq-icon.open { transform: rotate(45deg); }
+
+    /* Navbar blur */
+    .navbar {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(12,12,12,0.85);
+      border-bottom: 1px solid #1f1f1f;
+    }
+
+    /* Divider */
+    .section-divider { width: 60px; height: 4px; background: #F97316; border-radius: 2px; }
+
+    /* Video wrapper */
+    .video-wrapper {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 16 / 9;
+    }
+    .play-btn {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.45);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .play-btn:hover { background: rgba(0,0,0,0.25); }
+    .play-circle {
+      width: 80px; height: 80px;
+      background: #F97316;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 40px rgba(249,115,22,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .play-btn:hover .play-circle {
+      transform: scale(1.1);
+      box-shadow: 0 0 60px rgba(249,115,22,0.7);
+    }
+
+    /* Stat cards */
+    .stat-card { border-right: 2px solid #F97316; }
+    .stat-card:last-child { border-right: none; border-right: none; }
+
+    /* Testimonial stars */
+    .star { color: #F97316; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0C0C0C; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+    /* Section fade-in */
+    @media (prefers-reduced-motion: no-preference) {
+      .fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+      .fade-in.visible { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Badge */
+    .badge-orange {
+      display: inline-block;
+      background: rgba(249,115,22,0.12);
+      color: #F97316;
+      border: 1px solid rgba(249,115,22,0.3);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════ -->
+<nav class="navbar fixed top-0 right-0 left-0 z-50 px-6 py-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-brand-orange flex items-center justify-center">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .03 2.713-1.523 2.523l-3.329-.416a7.5 7.5 0 01-5.69-4.614l-.63-1.576" />
+        </svg>
+      </div>
+      <span class="text-white font-bold text-lg tracking-tight">AI לעסקים</span>
+    </div>
+
+    <!-- CTA -->
+    <a href="#pricing" class="btn-orange hidden md:inline-block px-5 py-2.5 text-sm">
+      הצטרף עכשיו
+    </a>
+
+    <!-- Mobile menu icon -->
+    <button class="md:hidden text-white cursor-pointer" aria-label="תפריט">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section class="relative min-h-screen flex flex-col justify-center pt-24 pb-16 px-6 overflow-hidden">
+
+  <!-- Background decoration -->
+  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full opacity-[0.04]"
+       style="background: radial-gradient(circle, #F97316 0%, transparent 70%); pointer-events:none;"></div>
+  <div class="absolute top-20 right-0 w-[400px] h-[400px] rounded-full opacity-[0.05]"
+       style="background: radial-gradient(circle, #F97316 0%, transparent 70%); pointer-events:none;"></div>
+
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+      <!-- Text -->
+      <div class="fade-in">
+        <span class="badge-orange mb-5 block">קורס מעשי לבעלי עסקים בלי רקע טכנולוגי</span>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6" style="line-height:1.15;">
+          בינה מלאכותית<br />
+          לעסק שלך —<br />
+          <span class="gradient-text">בלי פחד, עם תוצאות.</span>
+        </h1>
+
+        <p class="text-lg text-gray-400 leading-relaxed mb-8 max-w-lg" style="font-size:1.1rem; line-height:1.75;">
+          הקורס המעשי היחיד שמלמד בעלי עסקים לנצל AI כדי <strong class="text-white">לחסוך 10+ שעות בשבוע</strong>, לכתוב תוכן שיווקי תוך דקות, ולהתחרות עם חברות גדולות — עם תקציב קטן.
+        </p>
+
+        <!-- Social proof micro -->
+        <div class="flex items-center gap-3 mb-8">
+          <!-- Avatars -->
+          <div class="flex -space-x-3 space-x-reverse">
+            <div class="w-9 h-9 rounded-full border-2 border-brand-bg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-xs font-bold">ד</div>
+            <div class="w-9 h-9 rounded-full border-2 border-brand-bg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-xs font-bold">י</div>
+            <div class="w-9 h-9 rounded-full border-2 border-brand-bg bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-xs font-bold">ר</div>
+            <div class="w-9 h-9 rounded-full border-2 border-brand-bg bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-xs font-bold">מ</div>
+          </div>
+          <div>
+            <div class="flex gap-0.5 mb-0.5">
+              <span class="star text-sm">★★★★★</span>
+            </div>
+            <p class="text-gray-400 text-sm"><span class="text-white font-semibold">+2,400</span> בעלי עסקים כבר לומדים</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#pricing" class="btn-orange px-8 py-4 text-lg text-center">
+            אני רוצה להצטרף →
+          </a>
+          <a href="#video" class="flex items-center justify-center gap-2 px-6 py-4 text-gray-300 hover:text-white transition-colors cursor-pointer border border-brand-border rounded-xl hover:border-gray-600 text-base font-medium">
+            <svg class="w-5 h-5 text-brand-orange" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            צפה בסרטון הקורס
+          </a>
+        </div>
+      </div>
+
+      <!-- Video -->
+      <div class="fade-in" id="video">
+        <div class="video-wrapper shadow-orange">
+          <!-- Thumbnail placeholder -->
+          <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); width:100%; height:100%; position:absolute; inset:0;"></div>
+          <!-- Overlay text -->
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding:2rem; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);">
+            <p class="text-white font-semibold text-center text-lg">"הסרטון הזה שינה את הדרך שאני מנהל את העסק שלי"</p>
+            <p class="text-gray-400 text-sm mt-1">— דנה כהן, בעלת סלון יופי</p>
+          </div>
+          <div class="play-btn" onclick="this.innerHTML='<div style=\'color:white;font-size:1rem;font-weight:600;\'>▶ סרטון הדגמה יוצג כאן</div>'">
+            <div class="play-circle">
+              <svg class="w-8 h-8 text-white mr-[-4px]" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <!-- Stats below video -->
+        <div class="grid grid-cols-3 gap-px mt-4 bg-brand-border rounded-2xl overflow-hidden">
+          <div class="bg-brand-card px-4 py-4 text-center">
+            <div class="text-2xl font-black text-white">32</div>
+            <div class="text-xs text-gray-500 mt-0.5">שעות תוכן</div>
+          </div>
+          <div class="bg-brand-card px-4 py-4 text-center">
+            <div class="text-2xl font-black text-brand-orange">4.9</div>
+            <div class="text-xs text-gray-500 mt-0.5">דירוג ממוצע</div>
+          </div>
+          <div class="bg-brand-card px-4 py-4 text-center">
+            <div class="text-2xl font-black text-white">90</div>
+            <div class="text-xs text-gray-500 mt-0.5">יום אחריות</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     LOGOS / SOCIAL PROOF BAR
+════════════════════════════════════════ -->
+<section class="border-y border-brand-border py-8 px-6">
+  <div class="max-w-6xl mx-auto">
+    <p class="text-center text-gray-500 text-sm mb-6">בעלי עסקים מכל התחומים כבר עשו את הקפיצה</p>
+    <div class="flex flex-wrap justify-center items-center gap-8 opacity-50">
+      <span class="text-gray-400 font-bold text-lg">מסעדות</span>
+      <span class="text-gray-400 text-xl">·</span>
+      <span class="text-gray-400 font-bold text-lg">קוסמטיקה</span>
+      <span class="text-gray-400 text-xl">·</span>
+      <span class="text-gray-400 font-bold text-lg">ייעוץ עסקי</span>
+      <span class="text-gray-400 text-xl">·</span>
+      <span class="text-gray-400 font-bold text-lg">נדל"ן</span>
+      <span class="text-gray-400 text-xl">·</span>
+      <span class="text-gray-400 font-bold text-lg">קמעונאות</span>
+      <span class="text-gray-400 text-xl">·</span>
+      <span class="text-gray-400 font-bold text-lg">שירותים מקצועיים</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     PROMISES / BENEFITS
+════════════════════════════════════════ -->
+<section class="py-24 px-6 fade-in">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-16">
+      <span class="badge-orange mb-4 block">מה תוציא מהקורס</span>
+      <h2 class="text-4xl lg:text-5xl font-black mb-4">
+        4 שינויים שתרגיש<br />
+        <span class="gradient-text">כבר בשבוע הראשון</span>
+      </h2>
+      <p class="text-gray-400 text-lg max-w-xl mx-auto">בלי תיאוריה, בלי ז'רגון. רק כלים שאתה מפעיל היום ומרגיש את התוצאה מחר.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Card 1 -->
+      <div class="glass-card p-6 cursor-pointer">
+        <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2 text-white">10+ שעות בשבוע</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">תאמן AI לעשות את כל העבודות החוזרות שגוזלות לך שעות — מענה למיילים, סיכום ישיבות, הכנת דוחות.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="glass-card p-6 cursor-pointer">
+        <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2 text-white">תוכן שיווקי ב-10 דקות</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">פוסטים לאינסטגרם, דפי נחיתה, קמפיינים — תכתוב תוך דקות את מה שלקח לך שעות, בלי לשכור קופירייטר.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="glass-card p-6 cursor-pointer">
+        <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2 text-white">ניתוח נתונים בלי להיות "בן אדם של מספרים"</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">שאל את ה-AI שאלות פשוטות על העסק שלך וקבל תובנות שפעם דרשו יועץ עסקי ב-₪500 לשעה.</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="glass-card p-6 cursor-pointer">
+        <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2 text-white">תחרה עם חברות גדולות</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">הכלים שבאחרות עולים מאות אלפי שקלים — אתה תשתמש בהם ב-$20 בחודש. זה המשחק שמשנה.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════ -->
+<section class="py-24 px-6 fade-in" style="background: linear-gradient(180deg, transparent 0%, #111111 30%, #111111 70%, transparent 100%);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="text-center mb-16">
+      <span class="badge-orange mb-4 block">עדויות אמיתיות</span>
+      <h2 class="text-4xl lg:text-5xl font-black">
+        מה אומרים<br />
+        <span class="gradient-text">בעלי העסקים</span>
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Testimonial 1 -->
+      <div class="glass-card p-7 flex flex-col cursor-pointer">
+        <div class="flex gap-1 mb-4">
+          <span class="star">★★★★★</span>
+        </div>
+        <blockquote class="text-gray-300 leading-relaxed flex-grow mb-6 text-base">
+          "פחדתי מ-AI כי חשבתי שזה רק לאנשי היי-טק. אחרי שבועיים בקורס אני כותבת את כל התוכן לסושיאל בעצמי תוך 20 דקות. חסכתי 3,000 ש"ח בחודש על קופירייטרית."
+        </blockquote>
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center font-bold text-lg flex-shrink-0">ד</div>
+          <div>
+            <div class="text-white font-semibold text-sm">דנה כהן</div>
+            <div class="text-gray-500 text-xs">בעלת סלון יופי, תל אביב</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 — featured -->
+      <div class="p-7 flex flex-col cursor-pointer" style="background:#141414; border: 2px solid rgba(249,115,22,0.4); border-radius:20px; box-shadow: 0 0 40px rgba(249,115,22,0.12);">
+        <div class="flex gap-1 mb-4">
+          <span class="star">★★★★★</span>
+        </div>
+        <blockquote class="text-gray-200 leading-relaxed flex-grow mb-6 text-base">
+          "המסעדה שלי הייתה מאבדת לקוחות כי לא עמדתי בקצב של הרשתות. עכשיו ה-AI מנהל את כל התקשורת עם לקוחות, כותב תפריטים, ועוזר לי לתכנן מבצעים. ההכנסות עלו ב-22% ב-3 חודשים."
+        </blockquote>
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center font-bold text-lg flex-shrink-0">י</div>
+          <div>
+            <div class="text-white font-semibold text-sm">יוסי לוי</div>
+            <div class="text-gray-500 text-xs">בעל מסעדה, חיפה</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="glass-card p-7 flex flex-col cursor-pointer">
+        <div class="flex gap-1 mb-4">
+          <span class="star">★★★★★</span>
+        </div>
+        <blockquote class="text-gray-300 leading-relaxed flex-grow mb-6 text-base">
+          "כיועצת עסקית, הייתי מבלה שעות בכתיבת הצעות מחיר ודוחות לקוח. היום ה-AI עושה 80% מהעבודה. לקחתי שני לקוחות חדשים עם הזמן שפינה לי."
+        </blockquote>
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center font-bold text-lg flex-shrink-0">ר</div>
+          <div>
+            <div class="text-white font-semibold text-sm">רחל שמואלי</div>
+            <div class="text-gray-500 text-xs">יועצת עסקית, ירושלים</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Trust bar -->
+    <div class="mt-12 flex flex-wrap justify-center gap-8 text-center">
+      <div>
+        <div class="text-3xl font-black text-white">2,400+</div>
+        <div class="text-gray-500 text-sm mt-1">בעלי עסקים</div>
+      </div>
+      <div class="hidden sm:block w-px bg-brand-border"></div>
+      <div>
+        <div class="text-3xl font-black text-brand-orange">4.9/5</div>
+        <div class="text-gray-500 text-sm mt-1">דירוג ממוצע</div>
+      </div>
+      <div class="hidden sm:block w-px bg-brand-border"></div>
+      <div>
+        <div class="text-3xl font-black text-white">97%</div>
+        <div class="text-gray-500 text-sm mt-1">ממליצים לחברים</div>
+      </div>
+      <div class="hidden sm:block w-px bg-brand-border"></div>
+      <div>
+        <div class="text-3xl font-black text-white">90</div>
+        <div class="text-gray-500 text-sm mt-1">יום אחריות מלאה</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     PRICING
+════════════════════════════════════════ -->
+<section id="pricing" class="py-24 px-6 fade-in">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="text-center mb-16">
+      <span class="badge-orange mb-4 block">השקעה חד-פעמית</span>
+      <h2 class="text-4xl lg:text-5xl font-black mb-4">
+        בחר את המסלול<br />
+        <span class="gradient-text">שמתאים לך</span>
+      </h2>
+      <p class="text-gray-400 text-lg">גישה מלאה לכל התכנים. ללא תשלום חוזר. ללא סיסמאות מוגבלות.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+
+      <!-- Plan 1: Base -->
+      <div class="glass-card p-8 flex flex-col">
+        <div class="mb-6">
+          <h3 class="text-xl font-bold text-white mb-1">מסלול בסיס</h3>
+          <p class="text-gray-500 text-sm">מושלם להתחלה מהירה ועצמאית</p>
+        </div>
+        <div class="mb-8">
+          <span class="text-5xl font-black text-white">₪1,490</span>
+          <span class="text-gray-500 text-sm mr-2">תשלום חד-פעמי</span>
+        </div>
+        <ul class="space-y-3 mb-8 flex-grow">
+          <li class="flex items-start gap-3 text-sm text-gray-300">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            גישה מלאה ל-32 שעות תוכן
+          </li>
+          <li class="flex items-start gap-3 text-sm text-gray-300">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            100+ תבניות מוכנות לשימוש
+          </li>
+          <li class="flex items-start gap-3 text-sm text-gray-300">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            גישה לכל עדכוני הקורס ל-12 חודשים
+          </li>
+          <li class="flex items-start gap-3 text-sm text-gray-300">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            90 יום אחריות מלאה להחזר כספי
+          </li>
+        </ul>
+        <a href="#" class="block text-center py-4 px-6 rounded-xl border border-brand-orange text-brand-orange font-bold hover:bg-brand-orange hover:text-white transition-all duration-200 cursor-pointer">
+          בחר מסלול בסיס
+        </a>
+      </div>
+
+      <!-- Plan 2: VIP (popular) -->
+      <div class="card-popular p-8 flex flex-col relative">
+        <!-- Badge -->
+        <div class="absolute -top-4 right-1/2 translate-x-1/2">
+          <span class="bg-brand-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-orange">הכי פופולרי</span>
+        </div>
+        <div class="mb-6">
+          <h3 class="text-xl font-bold text-white mb-1">מסלול VIP</h3>
+          <p class="text-gray-500 text-sm">ליווי אישי לתוצאות מהירות יותר</p>
+        </div>
+        <div class="mb-8">
+          <span class="text-5xl font-black text-white">₪2,990</span>
+          <span class="text-gray-500 text-sm mr-2">תשלום חד-פעמי</span>
+        </div>
+        <ul class="space-y-3 mb-8 flex-grow">
+          <li class="flex items-start gap-3 text-sm text-gray-200">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            כל מה שבמסלול הבסיס
+          </li>
+          <li class="flex items-start gap-3 text-sm text-gray-200">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            קבוצת WhatsApp VIP עם המנחה
+          </li>
+          <li class="flex items-start gap-3 text-sm text-gray-200">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            שיחת ייעוץ אישית של 60 דקות
+          </li>
+          <li class="flex items-start gap-3 text-sm text-gray-200">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            גישה לכל עדכוני הקורס לצמיתות
+          </li>
+          <li class="flex items-start gap-3 text-sm text-gray-200">
+            <svg class="w-5 h-5 text-brand-orange flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            ספר עבודה אישי מותאם לעסק שלך
+          </li>
+        </ul>
+        <a href="#" class="btn-orange block text-center py-4 px-6 text-lg">
+          אני רוצה VIP →
+        </a>
+        <p class="text-center text-gray-600 text-xs mt-3">90 יום אחריות מלאה — ללא שאלות</p>
+      </div>
+
+    </div>
+
+    <!-- Guarantee -->
+    <div class="mt-10 max-w-xl mx-auto glass-card p-6 flex gap-4 items-start">
+      <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center flex-shrink-0">
+        <svg class="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+        </svg>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-1">אחריות 90 יום — ללא שאלות</h4>
+        <p class="text-gray-400 text-sm leading-relaxed">אם תוך 90 יום לא תרגיש שינוי בעסק — נחזיר לך את כל הכסף. אנחנו לא צריכים להסביר, אתה לא צריך להצדיק.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     FAQ
+════════════════════════════════════════ -->
+<section class="py-24 px-6 fade-in">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="text-center mb-16">
+      <span class="badge-orange mb-4 block">שאלות נפוצות</span>
+      <h2 class="text-4xl lg:text-5xl font-black">
+        יש לך שאלות?<br />
+        <span class="gradient-text">יש לנו תשובות.</span>
+      </h2>
+    </div>
+
+    <div class="space-y-0 rounded-2xl overflow-hidden border border-brand-border">
+
+      <!-- FAQ 1 -->
+      <div class="faq-item bg-brand-card">
+        <button class="w-full text-right px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="toggleFaq(this)">
+          <span class="text-white font-semibold text-base">אני בכלל לא "בן אדם טכנולוגי" — האם הקורס מתאים לי?</span>
+          <svg class="faq-icon w-5 h-5 text-brand-orange flex-shrink-0 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+        <div class="faq-answer px-6">
+          <p class="text-gray-400 text-sm leading-relaxed">הקורס תוכנן <strong class="text-gray-200">במיוחד</strong> בשבילך. 90% מהתלמידים הגיעו ללא שום ניסיון קודם עם AI. כל שיעור מתחיל מאפס, בשפה פשוטה, עם תרגול מיידי בעסק שלך — לא תרגישי שאתה "מקבר" שוב ושוב.</p>
+        </div>
+      </div>
+
+      <!-- FAQ 2 -->
+      <div class="faq-item bg-brand-card">
+        <button class="w-full text-right px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="toggleFaq(this)">
+          <span class="text-white font-semibold text-base">כמה זמן לוקח להשלים את הקורס?</span>
+          <svg class="faq-icon w-5 h-5 text-brand-orange flex-shrink-0 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+        <div class="faq-answer px-6">
+          <p class="text-gray-400 text-sm leading-relaxed">הקורס מכיל 32 שעות תוכן שאפשר לצרוך בקצב שמתאים לך. רוב הלומדים מסיימים בין 4-8 שבועות בקצב של שעה ביום. הקורס זמין 24/7, ניתן להשהות, לחזור ולצפות שוב בכל שיעור.</p>
+        </div>
+      </div>
+
+      <!-- FAQ 3 -->
+      <div class="faq-item bg-brand-card">
+        <button class="w-full text-right px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="toggleFaq(this)">
+          <span class="text-white font-semibold text-base">מה אם לא אהיה מרוצה?</span>
+          <svg class="faq-icon w-5 h-5 text-brand-orange flex-shrink-0 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+        <div class="faq-answer px-6">
+          <p class="text-gray-400 text-sm leading-relaxed">אחריות מלאה של 90 יום. אם מכל סיבה שהיא לא תרגיש שהקורס שווה את ההשקעה — שלח מייל אחד ונחזיר לך את כל הכסף תוך 3 ימי עסקים. ללא שאלות, ללא טפסים.</p>
+        </div>
+      </div>
+
+      <!-- FAQ 4 -->
+      <div class="faq-item bg-brand-card">
+        <button class="w-full text-right px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="toggleFaq(this)">
+          <span class="text-white font-semibold text-base">האם יש תמיכה בזמן הלמידה?</span>
+          <svg class="faq-icon w-5 h-5 text-brand-orange flex-shrink-0 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+        <div class="faq-answer px-6">
+          <p class="text-gray-400 text-sm leading-relaxed">כן! לרוכשי מסלול VIP יש גישה לקבוצת WhatsApp פעילה עם המנחה + שיחת ייעוץ אישית. לרוכשי מסלול בסיס — פורום קהילת הלומדים שבו אפשר לשאול שאלות ולקבל תשובות תוך 24 שעות.</p>
+        </div>
+      </div>
+
+      <!-- FAQ 5 -->
+      <div class="faq-item border-b-0 bg-brand-card">
+        <button class="w-full text-right px-6 py-5 flex justify-between items-center cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="toggleFaq(this)">
+          <span class="text-white font-semibold text-base">האם הכלים שאלמד עולים כסף?</span>
+          <svg class="faq-icon w-5 h-5 text-brand-orange flex-shrink-0 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+        <div class="faq-answer px-6">
+          <p class="text-gray-400 text-sm leading-relaxed">רוב הכלים שבהם נשתמש בקורס קיימים בגרסה <strong class="text-gray-200">חינמית מלאה</strong>. לכלים המתקדמים יש מנוי של $20 בחודש — עלות שרוב העסקים מחזירים תוך שבוע ראשון של שימוש.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     FINAL CTA
+════════════════════════════════════════ -->
+<section class="py-24 px-6 fade-in">
+  <div class="max-w-4xl mx-auto">
+    <div class="relative rounded-3xl overflow-hidden p-12 text-center" style="background: linear-gradient(135deg, #1a0f00 0%, #0f0f0f 40%, #0f0f0f 60%, #1a0800 100%); border: 1px solid rgba(249,115,22,0.2);">
+
+      <!-- Glow bg -->
+      <div class="absolute inset-0 opacity-10" style="background: radial-gradient(ellipse at center, #F97316 0%, transparent 70%); pointer-events:none;"></div>
+
+      <div class="relative z-10">
+        <span class="badge-orange mb-6 block">הצעה לזמן מוגבל</span>
+
+        <h2 class="text-4xl lg:text-5xl font-black mb-6" style="line-height:1.2;">
+          השנה — העסק שלך<br />
+          <span class="gradient-text">עם AI או בלי AI.</span>
+        </h2>
+
+        <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+          המתחרים שלך כבר לומדים. כל יום שעובר הוא יתרון שהם צוברים. ההחלטה שלך היום קובעת איפה תהיה בעוד שנה.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#pricing" class="btn-orange px-10 py-5 text-xl">
+            אני מצטרף עכשיו →
+          </a>
+          <a href="#" class="flex items-center justify-center gap-2 px-8 py-5 text-gray-300 hover:text-white transition-colors cursor-pointer border border-brand-border rounded-xl hover:border-gray-600 text-base font-medium">
+            יש לי שאלה — דברו איתי
+          </a>
+        </div>
+
+        <p class="text-gray-600 text-sm mt-6">90 יום אחריות מלאה · תשלום מאובטח · גישה מיידית</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer class="border-t border-brand-border py-8 px-6">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-brand-orange flex items-center justify-center">
+        <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .03 2.713-1.523 2.523l-3.329-.416a7.5 7.5 0 01-5.69-4.614l-.63-1.576" />
+        </svg>
+      </div>
+      <span class="text-gray-400 text-sm font-medium">AI לעסקים © 2024</span>
+    </div>
+    <div class="flex gap-6 text-gray-600 text-sm">
+      <a href="#" class="hover:text-gray-400 transition-colors cursor-pointer">מדיניות פרטיות</a>
+      <a href="#" class="hover:text-gray-400 transition-colors cursor-pointer">תנאי שימוש</a>
+      <a href="#" class="hover:text-gray-400 transition-colors cursor-pointer">צור קשר</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════
+     STICKY MOBILE CTA
+════════════════════════════════════════ -->
+<div class="fixed bottom-0 right-0 left-0 md:hidden z-40 p-4" style="background: linear-gradient(to top, rgba(12,12,12,1) 60%, transparent);">
+  <a href="#pricing" class="btn-orange block text-center py-4 text-lg">
+    הצטרף עכשיו — מ-₪1,490 בלבד
+  </a>
+</div>
+
+
+<script>
+  // FAQ Toggle
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const answer = item.querySelector('.faq-answer');
+    const icon = btn.querySelector('.faq-icon');
+    const isOpen = answer.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.faq-answer.open').forEach(el => el.classList.remove('open'));
+    document.querySelectorAll('.faq-icon.open').forEach(el => el.classList.remove('open'));
+
+    // Open clicked (if was closed)
+    if (!isOpen) {
+      answer.classList.add('open');
+      icon.classList.add('open');
+    }
+  }
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
